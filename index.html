@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión para Botica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Script para generar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-capsule-pill"></i> Botica Salud Total
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-module="dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-module="ventas">
+                            <i class="bi bi-cart-check"></i> Ventas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-module="compras">
+                            <i class="bi bi-box-seam"></i> Compras
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-module="inventario">
+                            <i class="bi bi-clipboard-data"></i> Inventario
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-module="clientes">
+                            <i class="bi bi-people"></i> Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-module="boticarios">
+                            <i class="bi bi-person-badge"></i> Boticarios
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container-fluid mt-4">
+        <!-- Dashboard -->
+        <div id="dashboard" class="module-content">
+            <!-- Primera fila: Métricas -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Ventas Hoy</h5>
+                            <p class="card-text fs-4" id="totalVentasHoy">S/ 0.00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Medicamentos en Stock</h5>
+                            <p class="card-text fs-4" id="totalMedicamentos">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Stock Bajo</h5>
+                            <p class="card-text fs-4" id="stockBajo">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Sin Stock</h5>
+                            <p class="card-text fs-4" id="sinStock">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segunda fila: Gráficos principales -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Medicamentos Más Vendidos</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="graficaMasVendidos"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Medicamentos Menos Vendidos</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="graficaMenosVendidos"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tercera fila: Nuevos gráficos de clientes y boticarios -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Clientes que Más Compran</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="graficaTopClientes"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Boticarios que Más Venden</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="graficaTopBoticarios"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo de Ventas -->
+        <div id="ventas" class="module-content d-none">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Registrar Venta</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="formVenta">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="clienteVenta" class="form-label">Cliente</label>
+                                        <select class="form-select" id="clienteVenta">
+                                            <option value="">Seleccionar cliente</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="boticarioVenta" class="form-label">Boticario que Atiende</label>
+                                        <select class="form-select" id="boticarioVenta" required>
+                                            <option value="">Seleccionar boticario</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- MÉTODO DE PAGO -->
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Método de Pago</label>
+                                        <div class="d-flex gap-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="metodoPago" id="efectivo" value="efectivo" checked>
+                                                <label class="form-check-label" for="efectivo">
+                                                    <i class="bi bi-cash"></i> Efectivo
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="metodoPago" id="tarjeta" value="tarjeta">
+                                                <label class="form-check-label" for="tarjeta">
+                                                    <i class="bi bi-credit-card"></i> Tarjeta
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- DATOS DE TARJETA (OCULTO POR DEFECTO) -->
+                                <div class="row mb-3 d-none" id="datosTarjeta">
+                                    <div class="col-md-12">
+                                        <div class="card border-info">
+                                            <div class="card-header bg-info text-white py-2">
+                                                <h6 class="mb-0"><i class="bi bi-credit-card-fill"></i> Datos de la Tarjeta</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="bancoTarjeta" class="form-label">Banco</label>
+                                                        <select class="form-select" id="bancoTarjeta">
+                                                            <option value="">Seleccionar banco</option>
+                                                            <option value="BCP">Banco de Crédito del Perú (BCP)</option>
+                                                            <option value="Interbank">Interbank</option>
+                                                            <option value="BBVA">BBVA Continental</option>
+                                                            <option value="Scotiabank">Scotiabank Perú</option>
+                                                            <option value="BanBif">BanBif</option>
+                                                            <option value="MiBanco">MiBanco</option>
+                                                            <option value="Banco de la Nación">Banco de la Nación</option>
+                                                            <option value="otros">Otro banco</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="numeroTarjeta" class="form-label">Número de Tarjeta</label>
+                                                        <input type="text" class="form-control" id="numeroTarjeta" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19">
+                                                        <div class="form-text">Ingresa los últimos 4 dígitos</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="guardarTarjeta">
+                                                            <label class="form-check-label" for="guardarTarjeta">
+                                                                Guardar datos de tarjeta para futuras compras
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="conReceta">
+                                            <label class="form-check-label" for="conReceta">
+                                                Venta con receta médica
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <label for="medicamentoVenta" class="form-label">Medicamento</label>
+                                        <select class="form-select" id="medicamentoVenta">
+                                            <option value="">Seleccionar medicamento</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="cantidadVenta" class="form-label">Cantidad</label>
+                                        <input type="number" class="form-control" id="cantidadVenta" min="1" value="1">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-primary" id="agregarProducto">
+                                        <i class="bi bi-plus-circle"></i> Agregar Producto
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicamento</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detalleVenta">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <h5>Total: S/ <span id="totalVenta">0.00</span></h5>
+                                <button type="button" class="btn btn-success btn-finalizar" id="finalizarVenta">
+                                    <i class="bi bi-check-circle"></i> Finalizar Venta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Información del Producto</h5>
+                        </div>
+                        <div class="card-body" id="infoProducto">
+                            <p class="text-muted">Selecciona un medicamento para ver información detallada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo de Compras -->
+        <div id="compras" class="module-content d-none">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Registrar Compra de Medicamentos</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="formCompra">
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <label for="medicamentoCompra" class="form-label">Medicamento</label>
+                                        <select class="form-select" id="medicamentoCompra">
+                                            <option value="">Seleccionar medicamento</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="cantidadCompra" class="form-label">Cantidad a Comprar</label>
+                                        <input type="number" class="form-control" id="cantidadCompra" min="1" value="1">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="precioCompra" class="form-label">Precio de Compra (Unitario)</label>
+                                        <input type="number" class="form-control" id="precioCompra" step="0.01" placeholder="Precio de compra">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="proveedorCompra" class="form-label">Proveedor</label>
+                                        <input type="text" class="form-control" id="proveedorCompra" placeholder="Nombre del proveedor">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-primary" id="agregarCompra">
+                                        <i class="bi bi-plus-circle"></i> Agregar a la Compra
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicamento</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
+                                            <th>Proveedor</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detalleCompra">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <h5>Total Compra: S/ <span id="totalCompra">0.00</span></h5>
+                                <button type="button" class="btn btn-success" id="finalizarCompra">
+                                    <i class="bi bi-check-circle"></i> Finalizar Compra
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Información del Medicamento</h5>
+                        </div>
+                        <div class="card-body" id="infoMedicamentoCompra">
+                            <p class="text-muted">Selecciona un medicamento para ver información</p>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Medicamentos con Stock Bajo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="listaStockBajo">
+                                <!-- Se llenará dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo de Inventario -->
+        <div id="inventario" class="module-content d-none">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Inventario de Medicamentos</h5>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarMedicamento">
+                        <i class="bi bi-plus-circle"></i> Agregar Medicamento
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Stock Mínimo</th>
+                                    <th>Ventas</th>
+                                    <th>Requiere Receta</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaInventario">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo de Clientes -->
+        <div id="clientes" class="module-content d-none">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Clientes</h5>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
+                        <i class="bi bi-plus-circle"></i> Agregar Cliente
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaClientes">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo de Boticarios -->
+        <div id="boticarios" class="module-content d-none">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Boticarios</h5>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarBoticario">
+                        <i class="bi bi-plus-circle"></i> Agregar Boticario
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Especialidad</th>
+                                    <th>Teléfono</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaBoticarios">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modales -->
+    <!-- Modal Agregar Medicamento -->
+    <div class="modal fade" id="modalAgregarMedicamento" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Medicamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarMedicamento">
+                        <div class="mb-3">
+                            <label for="nombreMedicamento" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreMedicamento" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="precioMedicamento" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="precioMedicamento" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockMedicamento" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="stockMedicamento" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockMinimoMedicamento" class="form-label">Stock Mínimo</label>
+                            <input type="number" class="form-control" id="stockMinimoMedicamento" required>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="requiereRecetaMedicamento">
+                                <label class="form-check-label" for="requiereRecetaMedicamento">
+                                    Requiere receta médica
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardarMedicamento">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Cliente -->
+    <div class="modal fade" id="modalAgregarCliente" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarCliente">
+                        <div class="mb-3">
+                            <label for="nombreCliente" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreCliente" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailCliente" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailCliente">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefonoCliente" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefonoCliente">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardarCliente">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Boticario -->
+    <div class="modal fade" id="modalAgregarBoticario" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Boticario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgregarBoticario">
+                        <div class="mb-3">
+                            <label for="nombreBoticario" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreBoticario" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="especialidadBoticario" class="form-label">Especialidad</label>
+                            <input type="text" class="form-control" id="especialidadBoticario" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefonoBoticario" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefonoBoticario">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardarBoticario">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

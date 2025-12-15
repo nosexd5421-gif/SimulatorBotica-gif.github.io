@@ -1,0 +1,45 @@
+{
+  "medicamentos": [
+    {"id": 1, "nombre": "Paracetamol 500mg", "precio": 5.50, "stock": 25, "stockMinimo": 10, "ventas": 120, "requiereReceta": false},
+    {"id": 2, "nombre": "Ibuprofeno 400mg", "precio": 7.80, "stock": 18, "stockMinimo": 15, "ventas": 95, "requiereReceta": false},
+    {"id": 3, "nombre": "Amoxicilina 500mg", "precio": 12.50, "stock": 8, "stockMinimo": 10, "ventas": 65, "requiereReceta": true},
+    {"id": 4, "nombre": "Omeprazol 20mg", "precio": 15.20, "stock": 22, "stockMinimo": 12, "ventas": 78, "requiereReceta": false},
+    {"id": 5, "nombre": "Loratadina 10mg", "precio": 8.90, "stock": 30, "stockMinimo": 15, "ventas": 110, "requiereReceta": false},
+    {"id": 6, "nombre": "Metformina 850mg", "precio": 18.75, "stock": 14, "stockMinimo": 10, "ventas": 45, "requiereReceta": true},
+    {"id": 7, "nombre": "Atorvastatina 20mg", "precio": 22.40, "stock": 9, "stockMinimo": 8, "ventas": 38, "requiereReceta": true},
+    {"id": 8, "nombre": "Losartán 50mg", "precio": 16.80, "stock": 16, "stockMinimo": 12, "ventas": 52, "requiereReceta": true},
+    {"id": 9, "nombre": "Salbutamol Inhalador", "precio": 28.50, "stock": 5, "stockMinimo": 6, "ventas": 29, "requiereReceta": true},
+    {"id": 10, "nombre": "Aspirina 100mg", "precio": 6.20, "stock": 35, "stockMinimo": 20, "ventas": 135, "requiereReceta": false},
+    {"id": 11, "nombre": "Diclofenaco 50mg", "precio": 9.40, "stock": 12, "stockMinimo": 10, "ventas": 67, "requiereReceta": true},
+    {"id": 12, "nombre": "Ciprofloxacino 500mg", "precio": 14.80, "stock": 7, "stockMinimo": 8, "ventas": 41, "requiereReceta": true},
+    {"id": 13, "nombre": "Ranitidina 150mg", "precio": 11.20, "stock": 0, "stockMinimo": 10, "ventas": 58, "requiereReceta": false},
+    {"id": 14, "nombre": "Clonazepam 2mg", "precio": 19.90, "stock": 4, "stockMinimo": 5, "ventas": 32, "requiereReceta": true},
+    {"id": 15, "nombre": "Fluoxetina 20mg", "precio": 24.50, "stock": 11, "stockMinimo": 8, "ventas": 26, "requiereReceta": true},
+    {"id": 16, "nombre": "Hidroclorotiazida 25mg", "precio": 13.75, "stock": 17, "stockMinimo": 12, "ventas": 48, "requiereReceta": true},
+    {"id": 17, "nombre": "Metronidazol 500mg", "precio": 10.90, "stock": 6, "stockMinimo": 8, "ventas": 37, "requiereReceta": true},
+    {"id": 18, "nombre": "Prednisona 5mg", "precio": 8.40, "stock": 20, "stockMinimo": 15, "ventas": 63, "requiereReceta": true},
+    {"id": 19, "nombre": "Warfarina 5mg", "precio": 17.20, "stock": 3, "stockMinimo": 5, "ventas": 19, "requiereReceta": true},
+    {"id": 20, "nombre": "Insulina NPH", "precio": 45.00, "stock": 8, "stockMinimo": 10, "ventas": 22, "requiereReceta": true}
+  ],
+  "doctores": [
+    {"id": 1, "nombre": "Dr. Carlos Mendoza", "especialidad": "Medicina General", "telefono": "987654321"},
+    {"id": 2, "nombre": "Dra. Ana López", "especialidad": "Pediatría", "telefono": "987654322"},
+    {"id": 3, "nombre": "Dr. Roberto Silva", "especialidad": "Cardiología", "telefono": "987654323"},
+    {"id": 4, "nombre": "Dra. María García", "especialidad": "Ginecología", "telefono": "987654324"},
+    {"id": 5, "nombre": "Dr. Javier Torres", "especialidad": "Traumatología", "telefono": "987654325"},
+    {"id": 6, "nombre": "Dra. Laura Pérez", "especialidad": "Dermatología", "telefono": "987654326"},
+    {"id": 7, "nombre": "Dr. Miguel Ángel Ruiz", "especialidad": "Oftalmología", "telefono": "987654327"},
+    {"id": 8, "nombre": "Dra. Carmen Vargas", "especialidad": "Neurología", "telefono": "987654328"},
+    {"id": 9, "nombre": "Dr. Fernando Castro", "especialidad": "Psiquiatría", "telefono": "987654329"},
+    {"id": 10, "nombre": "Dra. Patricia Ríos", "especialidad": "Endocrinología", "telefono": "987654330"}
+  ],
+  "clientes": [
+    {"id": 1, "nombre": "Juan Pérez", "email": "juan@email.com", "telefono": "912345678"},
+    {"id": 2, "nombre": "María González", "email": "maria@email.com", "telefono": "912345679"},
+    {"id": 3, "nombre": "Carlos Rodríguez", "email": "carlos@email.com", "telefono": "912345680"},
+    {"id": 4, "nombre": "Ana Martínez", "email": "ana@email.com", "telefono": "912345681"},
+    {"id": 5, "nombre": "Luis Fernández", "email": "luis@email.com", "telefono": "912345682"}
+  ],
+  "ventas": [],
+  "compras": []
+}
